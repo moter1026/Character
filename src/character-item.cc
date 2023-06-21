@@ -44,7 +44,9 @@ bool game::Knight::ability()
 	if (this->_countAfterAbility == 0)
 	{
 		++(this->_countAfterAbility);
+		this->_ability = true;
 		this->_armor *= 2;
+		this->_old_damage = this->_damage;
 		this->_damage *= 0.85;
 		return true;
 	}
@@ -59,10 +61,14 @@ bool game::Knight::ability()
 
 float game::Knight::attack()
 {
-	/*int abil;
-	std::cout << "Если хотите применить `умение` персонажа, нажмите 1, в противном случае отличное от 1 число";
-	std::cin >> abil;
-	if (abil == 1)this->ability();*/
+	if (this->_ability)
+	{
+		this->_ability = false;
+	}
+	else if (!this->_ability && this->_countAfterAbility == 1) {
+		this->_armor /= 2;
+		this->_damage = this->_old_damage;
+	}
 	return game::Knight::calculationOfDamageToOther();
 }
 
@@ -114,6 +120,7 @@ bool game::Assasin::ability()
 	if (this->_countAfterAbility == 0)
 	{
 		++(this->_countAfterAbility);
+		this->_ability = true;
 		return true;
 	}
 	else if (this->_countAfterAbility == 2) {
@@ -131,6 +138,11 @@ float game::Assasin::attack()
 
 void game::Assasin::getAttack(game::Character& character, float damage)
 {
+	if (this->_ability) {
+		std::cout << "Ассасин увернулся от атаки";
+		this->_ability = false;
+		return;
+	}
 	if (this->_armor > 0 && damage <= this->_armor)	this->_armor -= damage;
 	else if (this->_armor > 0 && damage >= this->_armor) {
 		this->_hp += this->_armor - damage;
@@ -181,7 +193,10 @@ bool game::Berserk::ability()
 	if (this->_countAfterAbility == 0)
 	{
 		++(this->_countAfterAbility);
+		this->_ability = true;
+		this->_old_damage = this->_damage;
 		this->_damage *= 1.1;
+		//this->_old_armor = this->_armor;
 		this->_armor *= 0.85;
 		//Сделаю вероятность утроенного урона ещё меньше при применении умкения
 		if (game::GetRandomNumber(0, 100) >= 100 - this->_probability3XDamage + 5) {
@@ -201,6 +216,14 @@ bool game::Berserk::ability()
 
 float game::Berserk::attack()
 {
+	if (this->_ability)
+	{
+		this->_ability = false;
+	}
+	else if (!this->_ability && this->_countAfterAbility == 1) {
+		this->_damage = this->_old_damage;
+		this->_armor = this->_armor * 100 / 85;
+	}
 	return  game::Berserk::calculationOfDamageToOther();
 }
 

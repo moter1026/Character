@@ -16,11 +16,13 @@ namespace game {
 		float _damage;
 		bool _life;
 		int _countAfterAbility = 0;
+		bool _ability = false;
 		virtual float calculationOfDamageToOther() = 0;
 		virtual float calculationOfDamageToMe(Character& character, float damage) = 0;
 	public:
 		virtual bool ability() = 0;
 		virtual float attack() = 0;
+		bool getLife() { return this->_life; };
 		virtual void getAttack(game::Character& character, float damage) = 0;
 		virtual void print() = 0;
 
@@ -34,6 +36,7 @@ namespace game {
 	class Knight : public Character {
 	private:
 		int _probabilityMinimizeDamage = 35;
+		float _old_damage;
 	public:
 		Knight() = default;
 		Knight(float hp, float armor, float damage);
@@ -67,6 +70,8 @@ namespace game {
 	};
 	class Berserk : public Character {
 	private: 
+		float _old_damage;
+		//float _old_armor;
 		int _probability3XDamage = 10;
 	public:
 		Berserk() = default;

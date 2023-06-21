@@ -42,7 +42,7 @@ void mainMenu(game::Game game) {
 	size_t item_menu;
 	while (true)
 	{
-		cout << "*\t 1) Посмотреть всю информацию о игр" << endl;
+		cout << "*\t 1) Посмотреть всю информацию о игре" << endl;
 		cout << "*\t 2) Создать нового персонажа" << endl;
 		cout << "*\t 3) Создать нового персонажа по индексу" << endl;
 		cout << "*\t 4) Устроить бой между двумя живыми персонажеми(выбор по индексу)" << endl;
@@ -96,6 +96,103 @@ void mainMenu(game::Game game) {
 		}
 			break;
 		case 4:
+		{
+			if (game.getCountCharacters() < 2) {
+				cout << "Слишком мало персонажей!\t добавьте ещё героев." << endl;
+				break;
+			}
+			cout << "Введите индексы двух персонажей, между которыми будет бой" << endl;
+			size_t index1, index2;
+			cout << "Индекс первого персонажа" << endl;
+			cin >> index1;
+			cout << "Индекс второго персонажа" << endl;
+			cin >> index2;
+			game::Character& person1 = *game[index1];
+			game::Character& person2 = *game[index2];
+			size_t move = 1;
+			while (true)
+			{
+				if (!(person1.getLife() && person2.getLife())) {
+					cout << "___Один из персонажей погиб___" << endl;
+					break;
+				}
+				if (move == 1) cout << "Ходит первый персонаж \n" << endl;
+				else if (move == 2) cout << "Ходит второй персонаж \n" << endl;
+				else if (move == 0){
+					cout << "Бой закончен!" << endl;
+					break;
+				}
+				else cout << "Что-то пошло не так. Бой окончен." << endl;
+				size_t n;
+				
+				cout << "1) атаковать противника" << endl;
+				cout << "2) применить умение и атаковать" << endl;
+				cout << "3) посмотреть актуальную информацию о персонаже" << endl;
+				cout << "4) закончить бой" << endl;
+				cin >> n;
+				switch (n)
+				{
+				case 1:
+				{
+					if (move == 1)
+					{
+						float damage_to_other = person1.attack();
+						person2.getAttack(person1, damage_to_other);
+					}
+					else if (move == 2)
+					{
+						float damage_to_other = person2.attack();
+						person1.getAttack(person2, damage_to_other);
+					}
+				}
+					break;
+				case 2:
+				{
+					if (move == 1)
+					{
+						person1.ability();
+						float damage_to_other = person1.attack();
+						person2.getAttack(person1, damage_to_other);
+					}
+					else if (move == 2)
+					{
+						person2.ability();
+						float damage_to_other = person2.attack();
+						person1.getAttack(person2, damage_to_other);
+					}
+				}
+					break;
+				case 3:
+				{
+					if (move == 1)
+					{
+						person1.print();
+					}
+					else if (move == 2)
+					{
+						person2.print();
+					}
+					continue;
+				}
+					break;
+				case 4:
+				{
+					move = 0;
+				}
+					break;
+				default:
+					cout << "Такого пункта нет! Выберите ещё раз!" << endl;
+					break;
+				}
+
+				if (move == 1) {
+					++move;
+				}
+				else if (move == 2) {
+					--move;
+				}
+			}
+		}
 			break;
 		case 5:
 		{
@@ -104,6 +201,13 @@ void mainMenu(game::Game game) {
 		}
 			break;
 		case 6:
+		{
+			size_t index;
+			cout << "Введите индекс персонажа, который необходимо удалить" << endl;
+			cin >> index;
+			game.deleteCharacterInIndex(index);
+			cout << "Вы успешно удалили персонажа по индексу " << index << ".\n" << endl;
+		}
 			break;
 		case 7:
 			return;
