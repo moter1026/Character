@@ -29,10 +29,10 @@ FetchContent_MakeAvailable(googletest)
 
 # Объявляем тесты
 add_executable(console  "console app/console app.cc")
-target_link_libraries(console account)
+target_link_libraries(console character)
     
-add_executable(account_tests "tests/account_tests.cc")
-target_link_libraries(account_tests account GTest::gtest_main)
+#add_executable(character_tests "tests/character_tests.cc")
+#target_link_libraries(character_tests character GTest::gtest_main)
 
 
 

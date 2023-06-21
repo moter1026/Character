@@ -5,18 +5,24 @@
 #include "character-item.h"
 #pragma once
 
-
 namespace game {
+	using itemCharacter = std::shared_ptr<game::Character>;
+
 	class Game {
 	private:
-		std::vector<std::shared_ptr<game::Character>> _all_character;
+		std::vector<itemCharacter> _all_character;
+		std::string _name_of_game;
 	public:
-		Game();
-		Game(game::Game& cont);
-		float getCountCharacters() const noexcept;
-		void setCharacter();
-		void setCharacterInIndex();
+		//Game() = default;
+		Game(std::string nameOfGame);
+		std::string getNameOfGame() const noexcept;
+		int getCountCharacters() const noexcept;
+		void setCharacter(itemCharacter character);
+		void setCharacterInIndex(size_t index, itemCharacter character);
 		void deleteCharacter();
-		game::Character& operator[](size_t index);
+		void deleteCharacterInIndex(size_t index);
+		itemCharacter operator[](size_t index);
 	};
+	std::ostream& operator <<(std::ostream& stream, game::Game& game);
+	
 }

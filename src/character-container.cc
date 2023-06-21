@@ -5,24 +5,56 @@
 #include "..\include\character\character-item.h"
 #include "..\include\character\character-container.h"
 
-float game::Game::getCountCharacters() const noexcept
+
+game::Game::Game(std::string nameOfGame)
 {
-	return 0.0f;
+	this->_name_of_game = nameOfGame;
 }
 
-void game::Game::setCharacter()
+std::string game::Game::getNameOfGame() const noexcept
 {
+	return this->_name_of_game;
 }
 
-void game::Game::setCharacterInIndex()
+
+
+int game::Game::getCountCharacters() const noexcept
 {
+	return this->_all_character.size();
+}
+
+void game::Game::setCharacter(itemCharacter character) {
+	this->_all_character.insert(this->_all_character.end(), character);
+}
+
+void game::Game::setCharacterInIndex(size_t index, itemCharacter character)
+{
+	this->_all_character.insert(this->_all_character.begin() + index,
+		character);
 }
 
 void game::Game::deleteCharacter()
 {
+	this->_all_character.erase(this->_all_character.begin() + this->_all_character.size() - 1);
+}
+void game::Game::deleteCharacterInIndex(size_t index)
+{
+	this->_all_character.erase(this->_all_character.begin() + index);
+
+}
+game::itemCharacter game::Game::operator[](size_t index)
+{
+	return this->_all_character.at(index); 
 }
 
-game::Character& game::Game::operator[](size_t index)
-{
-	// TODO: вставьте здесь оператор return
+std::ostream& game::operator <<(std::ostream& stream, game::Game& game) {
+	stream << "--->Название игры: " << game.getNameOfGame() << "\n\n";
+	stream << "Персонажи игры: " << std::endl;
+	int size = game.getCountCharacters();
+	for (size_t i = 0; i < size; i++)
+	{
+		stream << "Index: " << i << std::endl;
+		game[i]->print();
+	}
+	return stream;
 }
